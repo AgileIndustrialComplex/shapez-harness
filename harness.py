@@ -17,9 +17,12 @@ import os
 import re
 import sys
 
-from playwright.sync_api import sync_playwright
-
 import shapez_save
+
+try:  # playwright is only needed to actually drive the game, not to unit-test
+    from playwright.sync_api import sync_playwright
+except ImportError:  # pragma: no cover
+    sync_playwright = None
 
 URL = "https://shapez.io/"
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -73,6 +76,9 @@ class ShapezHarness:
     """One chromium page driving shapez.io."""
 
     def __init__(self, headless: bool = True, width: int = 1512, height: int = 770):
+        if sync_playwright is None:
+            raise ImportError("playwright is required to drive the game: "
+                              "pip install playwright && playwright install chromium")
         self.width, self.height = width, height
         self.step = 0
         self.calibrated = False
