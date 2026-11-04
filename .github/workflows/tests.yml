@@ -1,0 +1,23 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.10", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install --upgrade pip pytest lzstring
+      # The browser is NOT installed: pytest covers the savegame codec and the
+      # calibration maths only. Driving the real game needs a live shapez.io
+      # session and is run manually (see README).
+      - run: python -m pytest tests -q

@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+obs_*.png
+last_save.txt
+lz/
+*.egg-info/
+build/
+dist/
